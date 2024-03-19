@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.chatroom.mapper.UserMapper">
+    <select id="all" resultType="User">
+        select * from user;
+    </select>
+    <select id="getByUsername" resultType="User" parameterType="java.lang.String">
+        select * from user where username=#{username};
+    </select>
+    <insert id="add" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
+        insert into user (username,password,salt) values (#{username},#{password},#{salt});
+    </insert>
+    <delete id="remove" parameterType="java.lang.Long">
+        delete from user where user_id=#{userId};
+    </delete>
+</mapper>
