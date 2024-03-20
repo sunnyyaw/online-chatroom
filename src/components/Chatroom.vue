@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <aside class="friend-box">
-      <Friends />
+      <Friends ref="friends"/>
     </aside>
     <main class="main-sector">
       <ChatScreen class="chat-screen" ref="chatScreen"/>
@@ -35,6 +35,7 @@ import TextPad from './subcomponents/TextPad.vue';
         socket.addEventListener("open",(event) => {
           store.commit('load',socket);
           this.$refs.chatScreen.init();
+          this.$refs.friends.init();
         });
         socket.addEventListener("message",(event) => {
           console.log("Message from server: ",event.data);

@@ -16,8 +16,17 @@ export default {
   methods: {
     handleSend() {
       const socket = this.$store.state.socket;
+      const chater = this.$store.state.chater;
       if(socket) {
-        socket.send(this.text);
+        if (chater === '公共聊天室') {
+          const msg = 'G/' + chater + '#' + this.text;
+          socket.send(msg);
+          console.log(`Send message ${msg}`);
+        } else {
+          const msg = 'M/' + chater + '#' + this.text;
+          socket.send(msg);
+          console.log(`Send message ${msg}`);
+        }
         this.text = '';
       }
     }

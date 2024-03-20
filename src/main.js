@@ -9,11 +9,15 @@ const store = createStore({
   state () {
     return {
       socket: null,
+      chater: '公共聊天室',
     }
   },
   mutations: {
     load (state,socket) {
       state.socket = socket;
+    },
+    changeChater (state,chater) {
+      state.chater = chater;
     }
   }
 });
