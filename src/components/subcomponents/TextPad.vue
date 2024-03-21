@@ -1,9 +1,8 @@
 <template>
   <div class="textpad-container">
-    <textarea class="textpad-textarea" autocomplete="off" v-model="text" />
-    <div class="textpad-bottom">
-      <button class="textpad-btn" @click="handleSend">发送</button>
-    </div>
+    <a-textarea class="textpad-textarea" placeholder="输入想要发送的内容" autocomplete="off" 
+    v-model:value="text" :maxlength="255"/>
+    <a-button type="primary" class="textpad-btn" @click="handleSend">发送</a-button>
   </div>
 </template>
 <script>
@@ -37,20 +36,12 @@ export default {
 .textpad-container {
   display: flex;
   flex-direction: column;
-}
-.textpad-bottom {
-  position: relative;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
+  align-items: end;
 }
 .textpad-btn {
-  position: absolute;
+  position: relative;
   right: 5%;
-}
-.textpad-btn:hover {
-  background-color: grey;
-  color: white;
+  width: 80px;
 }
 .textpad-textarea {
   resize: none;

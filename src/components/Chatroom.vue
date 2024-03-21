@@ -62,7 +62,7 @@ import TextPad from './subcomponents/TextPad.vue';
   height: 70%;
 }
 .tool-box {
-  height: 5%;
+  height: 1.5rem;
 }
 .text-pad {
   flex-grow: 1;
