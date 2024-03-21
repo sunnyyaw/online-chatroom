@@ -2,9 +2,9 @@
   <div ref="container" class="container">
     <div class="chatscreen-chater">{{ $store.state.chater }}</div>
     <div class="chatscreen-messages">
-      <p v-for="message,index in messages[$store.state.chater]" 
+      <p v-for="message,index in messages[$store.state.chater]?.messages" 
       :class="
-      message.self ? 'chatscreen-text align-right' : 'chatscreen-text'" >
+      message.username === $store.state.username ? 'chatscreen-text align-right' : 'chatscreen-text'" >
         {{ message.username + ': ' + message.pureMessage + ' ' + message.dateTime}}
       </p>
     </div>
@@ -20,53 +20,45 @@ export default {
   methods: {
     init() {
       const socket = this.$store.state.socket;
-      const selfname = localStorage.getItem('username');
-      const messageStr = localStorage.getItem(`${selfname}message`);
-      if (messageStr) {
-        this.messages = JSON.parse(messageStr);
-      }
+      this.messages = this.$store.state.messages;
       socket.addEventListener('message',this.handleMessage);
     },
     handleMessage (event) {
       const message = event.data;
-      const selfname = localStorage.getItem('username');
       if (message.startsWith('M/')) {
         const head = message.slice(0,message.indexOf('#'));
         const parts = head.split('/');
+        const channel = '公共聊天室';
         const username = parts[1];
         const dateTime = parts[2];
         const pureMessage = message.slice(message.indexOf('#') + 1);
         const msg = {
-          self: username === selfname,
           username,
           pureMessage,
           dateTime
         };
-        if (!this.messages['公共聊天室']) {
-          this.messages['公共聊天室'] = [msg];
-        } else {
-          this.messages['公共聊天室'].push(msg);
-        }
+        this.$store.commit('pushMessage',{
+          msg,
+          channel
+        });
       } else if (message.startsWith('P/')) {
         const head = message.slice(0,message.indexOf('#'));
         const parts = head.split('/');
-        const from = parts[1];
+        const channel = parts[1];
         const username = parts[2];
         const dateTime = parts[3];
         const pureMessage = message.slice(message.indexOf('#') + 1);
         const msg = {
-          self: username === selfname,
           username,
           pureMessage,
           dateTime
         };
-        if (!this.messages[from]) {
-          this.messages[from] = [msg];
-        } else {
-          this.messages[from].push(msg);
-        }
+        this.$store.commit('pushMessage',{
+          msg,
+          channel
+        });
       }
-      localStorage.setItem(`${selfname}message`,JSON.stringify(this.messages));
+      this.$store.commit('storeMessage');
     }
   }
 }

@@ -48,8 +48,9 @@ export default {
       .then(response => {
         if (response.code === 200) {
           const token = response.data;
-          localStorage.setItem('token',token);
-          localStorage.setItem('username',username);
+          this.$store.commit('storeToken',token);
+          this.$store.commit('storeUsername',username);
+          this.$store.commit('loadMessage');
           this.$router.push('/');
         } else {
           console.log(response);

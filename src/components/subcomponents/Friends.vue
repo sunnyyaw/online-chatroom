@@ -24,11 +24,21 @@
 
       <div class="friend-bar-head">好友列表</div>
       <div class="friend-bar-item" @click="handleClick('公共聊天室')">
-        <span>公共聊天室</span>
+        <span>公共聊天室
+          {{ 
+          $store.state.messages['公共聊天室']? 
+          `${$store.state.messages['公共聊天室'].unread}条消息未读` : ''}}</span>
       </div>
       <div class="friend-bar-item" v-for="friend in Object.keys(friends)"
       @click="handleClick(friend)">
-        <span v-if="friends[friend].isFriend">{{ friend }} {{ friends[friend].online ? '在线' : '离线' }}</span>
+        <span v-if="friends[friend].isFriend">
+          {{ friend }} 
+          {{ friends[friend].online ? '在线' : '离线' }} 
+          {{ 
+          $store.state.messages[friend]? 
+          `${$store.state.messages[friend].unread}条消息未读` : ''
+          }}
+        </span>
       </div>
     </div>
   </div>
@@ -46,7 +56,7 @@
     components: {
     },
     mounted() {
-      this.username = localStorage.getItem('username');
+      this.username = this.$store.state.username;
     },
     methods: {
       init() {
@@ -67,12 +77,14 @@
             if (loginUser === this.username) {
               return;
             }
-            if (this.friends[loginUser] !== undefined) {
+            if (this.friends[loginUser]) {
               this.friends[loginUser].online = true;
             }
           } else if (message.startsWith('E/')) {
             const exitUser = message.split('/')[1];
-            this.friends[exitUser].online = false;
+            if (this.friends[exitUser]) {
+              this.friends[exitUser].online = false;
+            }
           }
         });
       },
