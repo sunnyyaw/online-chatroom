@@ -56,6 +56,12 @@ const store = createStore({
     loadMessage (state) {
       const messages = JSON.parse(localStorage.getItem(`${state.username}message`));
       state.messages = messages ? messages : {};
+    },
+    clearUnread (state,channel) {
+      if (state.messages[channel]) {
+        state.messages[channel].unread = 0;
+      }
+      localStorage.setItem(`${state.username}message`,JSON.stringify(state.messages));
     }
   }
 });

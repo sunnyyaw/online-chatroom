@@ -90,6 +90,7 @@
       },
       handleClick(friend) {
         this.$store.commit('changeChater',friend);
+        this.$store.commit('clearUnread',friend);
       },
       setModalVisible(value) {
         this.modalVisible = value;
