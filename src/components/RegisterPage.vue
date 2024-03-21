@@ -39,7 +39,8 @@ export default {
   },
   methods: {
     handleSubmit(event) {
-      const url = "http://localhost:8080/register";
+      const baseURL = this.$store.state.baseURL;
+      const url = baseURL + "/register";
       const body = {
         username: this.username,
         password: this.password

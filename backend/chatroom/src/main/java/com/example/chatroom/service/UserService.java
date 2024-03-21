@@ -12,6 +12,7 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
     public User getByUsername(String username) {return userMapper.getByUsername(username);}
+    public List<User> searchByUsername(String username){return userMapper.searchByUsername(username);}
     public List<User> all(){
         return userMapper.all();
     }

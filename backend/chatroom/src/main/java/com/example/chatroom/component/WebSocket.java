@@ -62,20 +62,29 @@ public class WebSocket {
     @OnMessage
     public void onMessage(String message){
         log.info("[WebSocket] 收到消息: {}",message);
-        String to = message.substring(message.indexOf('/') + 1,message.indexOf('#'));
-        String pureMessage = message.substring(message.indexOf('#') + 1);
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (message.startsWith("G/")) {
+            String pureMessage = message.substring(message.indexOf('#') + 1);
             sendAllMessage("M/" + name + "/" + time + "#" + pureMessage);
-            return;
-        }
-        if (webSocketSet.get(to) == null) {
-            bufferSet.computeIfAbsent(to, k -> new ArrayList<>());
-            sendMessage(name,"P/" + to + "/" + name + "/" + time + "#" + pureMessage);
-            bufferSet.get(to).add("P/" + name + "/" + name + "/" + time + "#" + pureMessage);
+        } else if(message.startsWith("Q/")) {
+            String target = message.substring(message.indexOf('/') + 1);
+            boolean online = webSocketSet.get(target) != null;
+            if(online) {
+                sendMessage(name,"L/" + target);
+            } else {
+                sendMessage(name,"E/" + target);
+            }
         } else {
-            sendMessage(name,"P/" + to + "/" + name + "/" + time + "#" + pureMessage);
-            sendMessage(to,"P/" + name + "/" + name + "/" + time + "#" + pureMessage);
+            String pureMessage = message.substring(message.indexOf('#') + 1);
+            String to = message.substring(message.indexOf('/') + 1,message.indexOf('#'));
+            if (webSocketSet.get(to) == null) {
+                bufferSet.computeIfAbsent(to, k -> new ArrayList<>());
+                sendMessage(name,"P/" + to + "/" + name + "/" + time + "#" + pureMessage);
+                bufferSet.get(to).add("P/" + name + "/" + name + "/" + time + "#" + pureMessage);
+            } else {
+                sendMessage(name,"P/" + to + "/" + name + "/" + time + "#" + pureMessage);
+                sendMessage(to,"P/" + name + "/" + name + "/" + time + "#" + pureMessage);
+            }
         }
     }
     @OnError

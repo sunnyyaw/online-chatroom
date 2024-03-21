@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface UserMapper {
     User getByUsername(String username);
+    List<User> searchByUsername(String username);
     List<User> all();
     int add(User user);
     int remove(Long userId);

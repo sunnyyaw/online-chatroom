@@ -30,7 +30,8 @@ export default {
   },
   methods: {
     handleSubmit(event) {
-      const url = "http://localhost:8080/login";
+      const baseURL = this.$store.state.baseURL;
+      const url = baseURL + "/login";
       const username = this.username;
       const password = this.password;
       const body = {

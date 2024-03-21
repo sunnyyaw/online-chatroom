@@ -4,6 +4,9 @@
     <select id="all" resultType="User">
         select * from user;
     </select>
+    <select id="searchByUsername" resultType="User">
+        select user_id,username from user where username like concat('%',#{username},'%');
+    </select>
     <select id="getByUsername" resultType="User" parameterType="java.lang.String">
         select * from user where username=#{username};
     </select>
