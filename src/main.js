@@ -35,11 +35,16 @@ const store = createStore({
       if (!state.messages[channel]) {
         state.messages[channel] = {
           messages: [msg],
-          unread: 1
+          unread: 0
         };
+        if (state.chater !== channel ){
+          state.messages[channel].unread = 1;
+        }
       } else {
         state.messages[channel].messages.push(msg);
-        state.messages[channel].unread += 1;
+        if (state.chater !== channel) {
+          state.messages[channel].unread += 1;
+        }
       }
     },
     storeMessage (state) {

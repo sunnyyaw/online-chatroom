@@ -25,20 +25,22 @@
       <div class="friend-bar-head">好友列表</div>
       <div class="friend-bar-item" @click="handleClick('公共聊天室')">
         <span>公共聊天室
-          {{ 
-          $store.state.messages['公共聊天室']? 
-          `${$store.state.messages['公共聊天室'].unread}条消息未读` : ''}}</span>
+        </span>
+        <a-badge v-if="$store.state.messages['公共聊天室']" 
+        :count="$store.state.messages['公共聊天室'].unread">
+        </a-badge>
       </div>
       <div class="friend-bar-item" v-for="friend in Object.keys(friends)"
       @click="handleClick(friend)">
         <span v-if="friends[friend].isFriend">
           {{ friend }} 
-          {{ friends[friend].online ? '在线' : '离线' }} 
-          {{ 
-          $store.state.messages[friend]? 
-          `${$store.state.messages[friend].unread}条消息未读` : ''
-          }}
         </span>
+        <a-badge :status="friends[friend].online ? 'success' : 'default'"
+        :text="friends[friend].online ? '在线' : '离线'">
+        </a-badge>
+        <a-badge v-if="$store.state.messages[friend]" 
+        :count="$store.state.messages[friend].unread">
+        </a-badge>
       </div>
     </div>
   </div>
