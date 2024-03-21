@@ -1,39 +1,57 @@
 <template>
   <div class="login-page-container">
-    <form @submit.prevent="handleSubmit"
+    <a-form 
+    @finish="handleSubmit"
+    :model="formState"
     class="login-page-form">
       <legend class="login-page-legend">用户名密码登录</legend>
-      <label class="login-page-label">用户名：
-        <input class="login-page-input" type="text" 
-        name="username" placeholder="请输入用户名" autocomplete="off"
-        v-model="username" required/>
-      </label>
-      <label class="login-page-label">密码：
-        <input class="login-page-input"  autocomplete="off"
-        type="password" name="password" placeholder="请输入密码" 
-        v-model="password" required/>
-      </label>
+      <a-form-item
+        label="用户名"
+        name="username"
+        class="login-page-input" 
+        :rules="[{required: true,message: '请输入用户名!'}]"
+      >
+        <a-input v-model:value="formState.username" 
+        placeholder="请输入用户名" autocomplete="off">
+        </a-input>
+      </a-form-item>
+
+      <a-form-item
+        label="密码"
+        name="password"
+        class="login-page-input"
+        :rules="[{required: true,message: '请输入密码!'}]"
+      >
+        <a-input-password v-model:value="formState.password" 
+        placeholder="请输入密码" autocomplete="off">
+        </a-input-password>
+      </a-form-item>
+
       <div class="login-page-btnbox">
-        <button class="login-page-btn" type="submit">登录</button>
+        <a-button class="login-page-btn" type="primary" html-type="submit">
+          登录
+        </a-button>
         <router-link to="/register" class="login-page-tag">没有账户?立即注册</router-link> 
       </div>
-    </form>
+    </a-form>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      username: '',
-      password: '',
+      formState: {
+        username: '',
+        password: '',
+      }
     }
   },
   methods: {
     handleSubmit(event) {
       const baseURL = this.$store.state.baseURL;
       const url = baseURL + "/login";
-      const username = this.username;
-      const password = this.password;
+      const username = this.formState.username;
+      const password = this.formState.password;
       const body = {
         username: username,
         password: password
@@ -64,6 +82,9 @@ export default {
 <style scoped>
 .login-page-input {
   font-size: 1.1rem;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .login-page-tag {
   position: absolute;
@@ -79,17 +100,6 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
-}
-.login-page-btn:hover {
-  background-color: grey;
-  color: white;
-}
-.login-page-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8rem;
-  margin-bottom: 40px;
 }
 .login-page-legend {
   text-align: center;

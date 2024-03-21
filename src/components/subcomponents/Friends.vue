@@ -148,8 +148,4 @@
   display: block;
   width: 100%;
 }
-.friend-bar-btn:hover {
-  background-color: gray;
-  color: white;
-}
 </style>
