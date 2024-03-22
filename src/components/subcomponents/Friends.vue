@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div class="friend-bar-user">当前用户{{ username }}</div>
+    <div class="friend-bar-user">
+      <span>当前用户{{ username }}</span>
+      <a-button class="friend-bar-logout"
+      @click="handleLogout">
+        <poweroff-outlined />注销
+      </a-button>
+    </div>
     <div>
 
       <a-button type="primary" class="friend-bar-btn" @click="() => setModalVisible(true)">
@@ -16,21 +22,29 @@
         <a-list item-layout="horizonal" :data-source="searchResult">
           <div class="friend-list-item" v-for="item in searchResult">
             <span>{{ item.username }}</span>
-            <a-button type="primary" class="friend-list-btn" 
+            <a-button v-show="item.username !== $store.state.username"
+            type="primary" 
+            class="friend-list-btn" 
             @click="handleAddFriend(item.username)">添加</a-button>
           </div>
         </a-list>
       </a-modal>
 
       <div class="friend-bar-head">好友列表</div>
-      <div class="friend-bar-item" @click="handleClick('公共聊天室')">
+      <div :class="$store.state.chater === '公共聊天室' ? 
+      'friend-bar-item friend-bar-item-active' :
+      'friend-bar-item'" 
+      @click="handleClick('公共聊天室')">
         <span>公共聊天室
         </span>
         <a-badge v-if="$store.state.messages['公共聊天室']" 
         :count="$store.state.messages['公共聊天室'].unread">
         </a-badge>
       </div>
-      <div class="friend-bar-item" v-for="friend in Object.keys(friends)"
+      <div :class="$store.state.chater === friend ? 
+      'friend-bar-item friend-bar-item-active' :
+      'friend-bar-item'" 
+      v-for="friend in Object.keys(friends)"
       @click="handleClick(friend)">
         <span v-if="friends[friend].isFriend">
           {{ friend }} 
@@ -45,7 +59,8 @@
     </div>
   </div>
 </template>
-<script>
+<script >
+  import {PoweroffOutlined } from '@ant-design/icons-vue';
   export default {
     data() {
       return {
@@ -56,6 +71,7 @@
       }
     },
     components: {
+      PoweroffOutlined
     },
     mounted() {
       this.username = this.$store.state.username;
@@ -123,23 +139,50 @@
         }
         localStorage.setItem(`${this.username}friends`,JSON.stringify(this.friends));
         this.modalVisible = false;
+      },
+      handleLogout(event) {
+        this.$store.state.socket.close();
+        this.$router.replace('/login');
+        this.$store.commit('logout');
       }
     }
   }
 </script>
 <style scoped>
 .friend-list-item {
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .friend-list-btn {
-  float: right;
+  position: relative;
+  right: 10px;
+}
+.friend-bar-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .friend-bar-item {
   user-select: none;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  margin: 2px 0;
+  padding: 6px;
+  border-radius: 6px;
+  outline: none;
+  background-color: white;
+  transition: background-color 0.3s cubic-bezier(0.645,0.045,0.355,1) 0s;
 }
 .friend-bar-item:hover {
-  background-color: gray;
-  color: white;
+  background-color: rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: background-color 0.3s cubic-bezier(0.645,0.045,0.355,1) 0s;
+}
+.friend-bar-item-active {
+  background-color: #e6f4ff;
+  color: #1677ff;
+  transition: background-color 0.3s cubic-bezier(0.645,0.045,0.355,1) 0s;
 }
 .friend-bar-head {
   text-align: center;

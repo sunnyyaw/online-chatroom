@@ -1,10 +1,9 @@
 <template>
   <div ref="container" class="container">
     <div class="chatscreen-chater">{{ $store.state.chater }}</div>
-    <div class="chatscreen-messages">
+    <div ref="messageBox" class="chatscreen-messages">
       <div v-for="message,index in messages[$store.state.chater]?.messages" 
-      :class="
-      message.username === $store.state.username ? 
+      :class="message.username === $store.state.username ? 
       'chatscreen-text align-right' : 'chatscreen-text'" >
       <div class="chatscreen-username-datetime">
         <span class="chatscreen-datetime">{{message.dateTime}}</span>
@@ -23,6 +22,13 @@ export default {
   data() {
     return {
       messages: {},
+    }
+  },
+  watch: {
+    '$store.state.chater': function() {
+      this.$nextTick(() => {
+        this.$refs.messageBox.lastElementChild?.scrollIntoView();
+      });
     }
   },
   methods: {
@@ -49,6 +55,11 @@ export default {
           msg,
           channel
         });
+        if (this.$store.state.chater === channel) {
+          this.$nextTick(() => {
+            this.$refs.messageBox.lastElementChild?.scrollIntoView();
+          });
+        }
       } else if (message.startsWith('P/')) {
         const head = message.slice(0,message.indexOf('#'));
         const parts = head.split('/');
@@ -65,6 +76,11 @@ export default {
           msg,
           channel
         });
+        if (this.$store.state.chater === channel) {
+          this.$nextTick(() => {
+            this.$refs.messageBox.lastElementChild?.scrollIntoView();
+          });
+        }
       }
       this.$store.commit('storeMessage');
     }
@@ -84,7 +100,7 @@ export default {
   margin-left: -1px;
   margin-right: unset;
   border-right: unset;
-  border-left: 8px solid #1677ff;
+  border-left: 7px solid #1677ff;
   border-top: 7px solid transparent;
   border-bottom: 7px solid transparent;
   border-radius: 3px;
@@ -93,7 +109,7 @@ export default {
   width: 0;
   height: 0;
   margin-right: -1px;
-  border-right: 8px solid #1677ff;
+  border-right: 7px solid #1677ff;
   border-top: 7px solid transparent;
   border-bottom: 7px solid transparent;
   border-radius: 3px;
@@ -122,10 +138,13 @@ export default {
   padding: 5px;
 }
 .chatscreen-chater {
+  position: sticky;
+  top: 0;
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2rem;
+  padding: 6px 0;
 }
 .chatscreen-text {
   margin: 0.2rem 0;

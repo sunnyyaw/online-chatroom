@@ -37,6 +37,9 @@ import TextPad from './subcomponents/TextPad.vue';
           this.$refs.chatScreen.init();
           this.$refs.friends.init();
         });
+        socket.addEventListener('error',(event) => {
+          this.$message.error('无法连接至服务器!');
+        })
         socket.addEventListener("message",(event) => {
           console.log("Message from server: ",event.data);
         });
@@ -52,6 +55,7 @@ import TextPad from './subcomponents/TextPad.vue';
 .friend-box {
   height: 100%;
   width: 20%;
+  border-inline-end: 1px solid rgba(5,5,5,0.06);
 }
 .main-sector {
   display: flex;

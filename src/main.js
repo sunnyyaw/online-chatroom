@@ -67,6 +67,15 @@ const store = createStore({
         state.messages[channel].unread = 0;
       }
       localStorage.setItem(`${state.username}message`,JSON.stringify(state.messages));
+    },
+    logout (state) {
+      localStorage.removeItem('username');
+      localStorage.removeItem('token');
+      state.socket = null;
+      state.chater = '公共聊天室';
+      state.username = null;
+      state.messages = {};
+      state.token = '';
     }
   }
 });
