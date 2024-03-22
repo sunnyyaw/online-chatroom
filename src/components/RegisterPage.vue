@@ -72,11 +72,16 @@ export default {
         if(response.code === 200) {
           console.log(response);
           this.$router.push({path: '/login'});
+          this.$message.success(response.message);
         } else {
           console.log(response);
+          this.$message.warning(response.message);
         }
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        this.$message.error('接口异常');
+      });
     }
   }
 }

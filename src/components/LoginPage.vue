@@ -70,11 +70,16 @@ export default {
           this.$store.commit('storeUsername',username);
           this.$store.commit('loadMessage');
           this.$router.push('/');
+          this.$message.success(response.message);
         } else {
           console.log(response);
+          this.$message.warning(response.message);
         }
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        this.$message.error('接口异常');
+      });
     }
   }
 }

@@ -2,11 +2,19 @@
   <div ref="container" class="container">
     <div class="chatscreen-chater">{{ $store.state.chater }}</div>
     <div class="chatscreen-messages">
-      <p v-for="message,index in messages[$store.state.chater]?.messages" 
+      <div v-for="message,index in messages[$store.state.chater]?.messages" 
       :class="
-      message.username === $store.state.username ? 'chatscreen-text align-right' : 'chatscreen-text'" >
-        {{ message.username + ': ' + message.pureMessage + ' ' + message.dateTime}}
-      </p>
+      message.username === $store.state.username ? 
+      'chatscreen-text align-right' : 'chatscreen-text'" >
+      <div class="chatscreen-username-datetime">
+        <span class="chatscreen-datetime">{{message.dateTime}}</span>
+      </div>
+      <div class="chatscreen-username-datetime">
+        <span class="chatscreen-username">{{ message.username }}</span>
+        <div class="chatscreen-arrow"></div>
+        <div class="chatscreen-message">{{message.pureMessage}}</div>
+      </div>
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +74,49 @@ export default {
 <style scoped>
 .align-right {
   text-align: right;
+}
+.align-right .chatscreen-username-datetime {
+  flex-direction: row-reverse;
+}
+.align-right .chatscreen-arrow {
+  width: 0;
+  height: 0;
+  margin-left: -1px;
+  margin-right: unset;
+  border-right: unset;
+  border-left: 8px solid #1677ff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-radius: 3px;
+}
+.chatscreen-arrow {
+  width: 0;
+  height: 0;
+  margin-right: -1px;
+  border-right: 8px solid #1677ff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-radius: 3px;
+}
+.chatscreen-username-datetime {
+  display: flex;
+  align-items: center;
+}
+.chatscreen-message {
+  background-color: #1677ff;
+  border-radius: 6px;
+  color: white;
+  padding: 4px 15px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+.chatscreen-username {
+  font-size: 0.8rem;
+  margin: 0 5px;
+}
+.chatscreen-datetime {
+  font-size: 0.8rem;
+  color: gray;
 }
 .chatscreen-messages {
   padding: 5px;
