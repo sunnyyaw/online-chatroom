@@ -1,7 +1,7 @@
 <template>
   <div class="textpad-container">
     <a-textarea class="textpad-textarea" placeholder="输入想要发送的内容" autocomplete="off" 
-    v-model:value="text" :maxlength="255"/>
+    v-model:value="text" :maxlength="355"/>
     <a-button type="primary" class="textpad-btn" @click="handleSend">发送</a-button>
   </div>
 </template>
@@ -39,13 +39,14 @@ export default {
   align-items: end;
 }
 .textpad-btn {
-  position: relative;
+  position: absolute;
   right: 5%;
+  bottom: 2%;
   width: 80px;
 }
 .textpad-textarea {
   resize: none;
-  height: 80%;
+  height: 100%;
   width: 100%;
 }
 </style>

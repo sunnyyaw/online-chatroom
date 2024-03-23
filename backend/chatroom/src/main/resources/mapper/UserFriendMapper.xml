@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.chatroom.mapper.UserFriendMapper">
+    <select id="get" resultType="UserFriend">
+        select * from user_friend where
+        user_id_first=#{userIdFirst} and user_id_second=#{userIdSecond};
+    </select>
+    <insert id="add" parameterType="UserFriend">
+        insert into user_friend (
+        user_id_first,
+        user_id_second,
+        confirm_first,
+        confirm_second)
+        values
+        (#{userIdFirst},
+        #{userIdSecond},
+        #{confirmFirst},
+        #{confirmSecond});
+    </insert>
+    <update id="update" parameterType="UserFriend">
+        update user_friend
+        <set>
+            <if test="confirmFirst!=null">
+                confirm_first=#{confirmFirst},
+            </if>
+            <if test="confirmSecond!=null">
+                confirm_second=#{confirmSecond}
+            </if>
+        </set>
+        <where>
+            user_id_first=#{userIdFirst} and
+            user_id_second=#{userIdSecond}
+        </where>
+    </update>
+</mapper>

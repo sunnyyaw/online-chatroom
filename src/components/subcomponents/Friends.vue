@@ -9,7 +9,14 @@
     </div>
     <div>
 
-      <a-button type="primary" class="friend-bar-btn" @click="() => setModalVisible(true)">
+      <a-button 
+      class="friend-bar-btn"
+      @click="handleProfile">
+        个人主页
+      </a-button>
+      <a-button type="primary" 
+      class="friend-bar-btn" 
+      @click="() => setModalVisible(true)">
         添加好友
       </a-button>
       <a-modal :open="modalVisible" title="搜索好友"
@@ -103,6 +110,15 @@
             if (this.friends[exitUser]) {
               this.friends[exitUser].online = false;
             }
+          } else if (message.startsWith('F/')) {
+            const newFriend = message.split('/')[1];
+            socket.send(`Q/${newFriend}`);
+            socket.send(`R/${newFriend}`);
+            this.friends[newFriend] = {
+              online: false,
+              isFriend: true,
+            };
+            localStorage.setItem(`${this.username}friends`,JSON.stringify(this.friends));
           }
         });
       },
@@ -131,12 +147,13 @@
       handleAddFriend(friendName) {
         const socket = this.$store.state.socket;
         if (socket) {
+          socket.send(`F/${friendName}`);
           socket.send(`Q/${friendName}`);
         }
         this.friends[friendName] = {
           online: false,
           isFriend: true
-        }
+        };
         localStorage.setItem(`${this.username}friends`,JSON.stringify(this.friends));
         this.modalVisible = false;
       },
@@ -144,6 +161,9 @@
         this.$store.state.socket.close();
         this.$router.replace('/login');
         this.$store.commit('logout');
+      },
+      handleProfile() {
+        this.$router.push(`/profile/${this.username}`);
       }
     }
   }

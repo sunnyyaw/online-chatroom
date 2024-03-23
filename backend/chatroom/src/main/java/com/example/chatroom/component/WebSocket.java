@@ -2,22 +2,28 @@ package com.example.chatroom.component;
 
 import com.example.chatroom.common.JWTUtils;
 import com.example.chatroom.common.ResultCode;
+import com.example.chatroom.service.UserFriendService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 @ServerEndpoint("/websocket/{token}")
 public class WebSocket {
+    private static UserFriendService userFriendService;
+    @Autowired
+    public void setUserFriendService(UserFriendService userFriendService) {
+        WebSocket.userFriendService = userFriendService;
+    }
     private Session session;
     private String name;
     private static ConcurrentHashMap<String,WebSocket> webSocketSet = new ConcurrentHashMap<>();
@@ -74,6 +80,19 @@ public class WebSocket {
             } else {
                 sendMessage(name,"E/" + target);
             }
+        } else if (message.startsWith("F/")) {
+            String target = message.substring(message.indexOf('/') + 1);
+            userFriendService.confirmFriend(name,target);
+            boolean online = webSocketSet.get(target) != null;
+            if(online) {
+                sendMessage(target,"F/" + name);
+            } else {
+                bufferSet.computeIfAbsent(target, k -> new ArrayList<>());
+                bufferSet.get(target).add("F/" + name);
+            }
+        } else if (message.startsWith("R/")) {
+            String target = message.substring(message.indexOf('/') + 1);
+            userFriendService.confirmFriend(name,target);
         } else if (message.equals("ping")) {
             sendMessage(name,"pong");
         } else {
