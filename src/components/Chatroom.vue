@@ -21,7 +21,8 @@ import TextPad from './subcomponents/TextPad.vue';
     },
     data () {
       return {
-
+        reconnectTimes: 0,
+        reconnectLimit: Number.MAX_VALUE,
       }
     },
     mounted() {
@@ -32,17 +33,49 @@ import TextPad from './subcomponents/TextPad.vue';
         const store = this.$store;
         const token = localStorage.getItem('token');
         const socket = new WebSocket(`ws://localhost:8080/websocket/${token}`);
+        store.commit('load',socket);
         socket.addEventListener("open",(event) => {
-          store.commit('load',socket);
           this.$refs.chatScreen.init();
           this.$refs.friends.init();
+          this.heartBeat(6000);
         });
         socket.addEventListener('error',(event) => {
           this.$message.error('无法连接至服务器!');
-        })
+          this.reconnect(6000);
+        });
+        socket.addEventListener('close',(event) => {
+          console.log('服务器断开连接');
+        });
         socket.addEventListener("message",(event) => {
           console.log("Message from server: ",event.data);
         });
+      },
+      reconnect(time) {
+        setTimeout(() => {
+          if (!this.$store.state.socket) {
+            return;
+          }
+          if (this.reconnectTimes < this.reconnectLimit) {
+            this.initWebSocket();
+            this.reconnectTimes++;
+            console.log(`第${this.reconnectTimes}次尝试重连`);
+          }
+        }, time);
+      },
+      heartBeat(time) {
+        setTimeout(() => {
+          if (!this.$store.state.socket) {
+            return;
+          }
+          const readyState = this.$store.state.socket.readyState;
+          if (readyState === WebSocket.OPEN ) {
+            this.$store.state.socket.send('ping');
+            this.heartBeat(time);
+            this.reconnectTimes = 0;
+          } else {
+            this.reconnect(time);
+          }
+        },time);
       }
     }
   }

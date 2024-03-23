@@ -74,6 +74,8 @@ public class WebSocket {
             } else {
                 sendMessage(name,"E/" + target);
             }
+        } else if (message.equals("ping")) {
+            sendMessage(name,"pong");
         } else {
             String pureMessage = message.substring(message.indexOf('#') + 1);
             String to = message.substring(message.indexOf('/') + 1,message.indexOf('#'));
