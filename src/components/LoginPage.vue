@@ -28,7 +28,10 @@
       </a-form-item>
 
       <div class="login-page-btnbox">
-        <a-button class="login-page-btn" type="primary" html-type="submit">
+        <a-button class="login-page-btn"
+         type="primary"
+         html-type="submit"
+         :loading="loading">
           登录
         </a-button>
         <router-link to="/register" class="login-page-tag">没有账户?立即注册</router-link> 
@@ -43,7 +46,8 @@ export default {
       formState: {
         username: '',
         password: '',
-      }
+      },
+      loading: false,
     }
   },
   methods: {
@@ -55,7 +59,8 @@ export default {
       const body = {
         username: username,
         password: password
-      }
+      };
+      this.loading = true;
       fetch(url,{
         method: 'post',
         headers: {
@@ -75,10 +80,12 @@ export default {
           console.log(response);
           this.$message.warning(response.message);
         }
+        this.loading = false;
       })
       .catch(error => {
         console.error(error);
-        this.$message.error('接口异常');
+        this.$message.error('网络连接异常');
+        this.loading = false;
       });
     }
   }

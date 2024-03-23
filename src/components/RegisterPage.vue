@@ -28,14 +28,17 @@
         class="login-page-input" 
         label="确认密码"
         name="confirmPassword"
-        :rules="[{required: true,message: '请再次输入密码!'}]">
+        :rules="[{validator: validatePass2,trigger: 'change'}]">
         <a-input-password id="confirmPassword"
         autocomplete="off"
         placeholder="请再次输入密码"
         v-model:value="formState.confirmPassword"></a-input-password>
       </a-form-item>
       <div class="login-page-btnbox">
-        <a-button class="login-page-btn" type="primary"  html-type="submit">注册</a-button>
+        <a-button class="login-page-btn" 
+        type="primary"  
+        html-type="submit"
+        :loading="loading">注册</a-button>
         <router-link to="/login" class="login-page-tag">已有账号?立即登录</router-link> 
       </div>
     </a-form>
@@ -50,7 +53,13 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-      }
+      },
+      formValidate: {
+        username: false,
+        password: false,
+        confirmPassword: false,
+      },
+      loading: false,
     }
   },
   methods: {
@@ -61,6 +70,7 @@ export default {
         username: this.formState.username,
         password: this.formState.password
       };
+      this.loading = true;
       fetch(url,{
         method: 'post',
         headers: {
@@ -77,11 +87,22 @@ export default {
           console.log(response);
           this.$message.warning(response.message);
         }
+        this.loading = false;
       })
       .catch(error => {
         console.error(error);
-        this.$message.error('接口异常');
+        this.$message.error('网络连接异常');
+        this.loading = false;
       });
+    },
+    async validatePass2(_rule,value) {
+      if (value === '') {
+        return Promise.reject('请再次输入密码');
+      } else if (value !== this.formState.password){
+        return Promise.reject('两次密码输入不一致');
+      } else {
+        return Promise.resolve();
+      }
     }
   }
 }
