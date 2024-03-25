@@ -19,6 +19,7 @@ public class UserService {
     public int add(User user){
         return userMapper.add(user);
     }
+    public int update(User user){return userMapper.update(user);}
     public int remove(Long userId){
         return userMapper.remove(userId);
     }

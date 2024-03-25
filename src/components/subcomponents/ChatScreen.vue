@@ -141,6 +141,7 @@ export default {
   position: sticky;
   top: 0;
   background-color: white;
+  border-bottom: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;

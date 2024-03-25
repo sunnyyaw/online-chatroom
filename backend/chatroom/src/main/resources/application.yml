@@ -6,6 +6,20 @@ spring:
     password: Qzy@13702560366
     url: jdbc:mysql://localhost:3306/chatroom?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      schema-locations: classpath*:sql/chatroom.sql
+      separator: ";"
+      username: root
+      password: Qzy@13702560366
+      continue-on-error: false
+  servlet:
+    multipart:
+      max-request-size: 3MB
+      max-file-size: 2MB
+
 server: port=8080
 mybatis:
   mapper-locations: classpath:mapper/*.xml

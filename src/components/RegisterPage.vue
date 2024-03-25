@@ -143,5 +143,8 @@ export default {
 .login-page-form {
   width: 400px;
   height: 320px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  box-shadow: 2px 2px 8px 2px dimgray;
 }
 </style>

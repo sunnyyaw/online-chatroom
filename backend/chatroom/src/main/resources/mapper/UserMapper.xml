@@ -5,14 +5,26 @@
         select * from user;
     </select>
     <select id="searchByUsername" resultType="User">
-        select user_id,username from user where username like concat('%',#{username},'%');
+        select user_id,username,avatar from user where username like concat('%',#{username},'%');
     </select>
-    <select id="getByUsername" resultType="User" parameterType="java.lang.String">
+    <select id="getByUsername" resultType="User" >
         select * from user where username=#{username};
     </select>
     <insert id="add" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
         insert into user (username,password,salt) values (#{username},#{password},#{salt});
     </insert>
+    <update id="update" parameterType="User">
+        update user
+        <set>
+         <if test="username!=null"> username=#{username},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="salt!=null">salt=#{salt},</if>
+            <if test="avatar!=null">avatar=#{avatar}</if>
+        </set>
+        <where>
+            user_id=#{userId}
+        </where>
+    </update>
     <delete id="remove" parameterType="java.lang.Long">
         delete from user where user_id=#{userId};
     </delete>

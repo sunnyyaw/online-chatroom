@@ -14,4 +14,5 @@ public interface UserMapper {
     List<User> all();
     int add(User user);
     int remove(Long userId);
+    int update(User user);
 }

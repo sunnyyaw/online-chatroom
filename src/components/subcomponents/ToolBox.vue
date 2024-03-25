@@ -17,5 +17,6 @@ export default {
 .toolbox-container {
   display: flex;
   gap: 2%;
+  padding: 0 5px;
 }
 </style>
