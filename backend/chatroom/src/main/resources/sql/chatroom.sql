@@ -15,14 +15,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
 --
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `user_id` bigint NOT NULL AUTO_INCREMENT,
   `username` varchar(30) NOT NULL,
   `password` varchar(60) NOT NULL,
@@ -46,10 +46,9 @@ UNLOCK TABLES;
 -- Table structure for table `user_friend`
 --
 
-DROP TABLE IF EXISTS `user_friend`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_friend` (
+CREATE TABLE IF NOT EXISTS `user_friend` (
   `user_id_first` bigint NOT NULL,
   `user_id_second` bigint NOT NULL,
   `confirm_first` tinyint(1) NOT NULL,

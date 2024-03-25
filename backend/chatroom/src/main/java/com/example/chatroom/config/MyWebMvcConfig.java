@@ -22,7 +22,8 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new JwtInterceptor())
                 .excludePathPatterns("/login")
                 .excludePathPatterns("/register")
-                .excludePathPatterns("/images/**");
+                .excludePathPatterns("/images/**")
+                .excludePathPatterns("/hello");
     }
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

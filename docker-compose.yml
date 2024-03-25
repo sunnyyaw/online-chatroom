@@ -1,0 +1,40 @@
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+     - "3306:3306"
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: Qzy@13702560366
+      MYSQL_DATABASE: chatroom
+    networks:
+     - hm-net
+  chatroom:
+    build:
+      context: ./backend/chatroom
+      dockerfile: Dockerfile
+    container_name: chatroom
+    ports:
+     - "8080:8080"
+    networks:
+     - hm-net
+    restart: always
+    depends_on:
+     - mysql
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+     - "8081:8081"
+    volumes:
+     - "./dist:/usr/share/nginx/html"
+     - "./nginx.conf:/etc/nginx/nginx.conf"
+    depends_on:
+     - chatroom
+    networks:
+     - hm-net
+networks:
+  hm-net:
+    name: chatroom

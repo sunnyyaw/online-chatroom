@@ -32,7 +32,7 @@ import TextPad from './subcomponents/TextPad.vue';
       initWebSocket() {
         const store = this.$store;
         const token = localStorage.getItem('token');
-        const socket = new WebSocket(`ws://localhost:8080/websocket/${token}`);
+        const socket = new WebSocket(`ws://${location.host}/wsUrl/websocket/${token}`);
         store.commit('load',socket);
         socket.addEventListener("open",(event) => {
           this.$refs.chatScreen.init();

@@ -64,14 +64,12 @@ export default {
   },
   methods: {
     handleSubmit(event) {
-      const baseURL = this.$store.state.baseURL;
-      const url = baseURL + "/register";
       const body = {
         username: this.formState.username,
         password: this.formState.password
       };
       this.loading = true;
-      fetch(url,{
+      fetch("/api/register",{
         method: 'post',
         headers: {
           "Content-Type": "application/json",

@@ -52,8 +52,6 @@ export default {
   },
   methods: {
     handleSubmit(event) {
-      const baseURL = this.$store.state.baseURL;
-      const url = baseURL + "/login";
       const username = this.formState.username;
       const password = this.formState.password;
       const body = {
@@ -61,7 +59,7 @@ export default {
         password: password
       };
       this.loading = true;
-      fetch(url,{
+      fetch("/api/login",{
         method: 'post',
         headers: {
           "Content-Type": "application/json"

@@ -6,7 +6,7 @@
         <a-descriptions-item label="头像">
           <a-upload name="avatar" v-model:file-list="filelist"
             list-type="picture-card" class="avatar-uploader" :show-upload-list="false"
-            action="http://localhost:8080/user/avatar" :before-upload="beforeUpload" @change="handleChange"
+            action="/api/user/avatar" :before-upload="beforeUpload" @change="handleChange"
             :headers="requestHeaders"
             :multiple="false">
             <a-avatar v-if="imgUrl" class="userpage-img">
@@ -48,7 +48,7 @@ export default {
     UserOutlined, PlusOutlined, LoadingOutlined
   },
   mounted() {
-    fetch(this.$store.state.baseURL + `/user/${this.$store.state.username}`, {
+    fetch(`/api/user/${this.$store.state.username}`, {
         headers: {
           'token': this.$store.state.token
         }
@@ -58,7 +58,7 @@ export default {
         if (response.code === 200) {
           console.log(response);
           this.imgUrl = response.data.avatar ? 
-          `http://localhost:8080/images/${response.data.avatar}?d=${new Date()}` :
+          `/api/images/${response.data.avatar}?d=${new Date()}` :
           null;
         } else {
           console.log(response);
@@ -89,7 +89,11 @@ export default {
       }
       if (info.file.status === 'done') {
         this.loading = false;
-        this.imgUrl = info.file.response.data + `?d=${new Date()}`;
+        if (info.file.response.code === 200) {
+          this.imgUrl = "/api" + info.file.response.data + `?d=${new Date()}`;
+        } else {
+          this.$message.error(info.file.response.message);
+        }
         return;
       }
       if (info.file.status === 'error') {

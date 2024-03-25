@@ -4,7 +4,7 @@
       <div>
         <a-avatar>
           <template #icon>
-            <img v-if="avatar" :src="`http://localhost:8080/images/${avatar}`" alt="头像" class="firend-bar-img" />
+            <img v-if="avatar" :src="`/api/images/${avatar}?d=${new Date()}`" alt="头像" class="firend-bar-img" />
             <UserOutlined v-else />
           </template>
         </a-avatar>
@@ -48,7 +48,7 @@
           <a-avatar shape="square">
             <template #icon>
               <img v-if="friends[friend].avatar" 
-              :src="`http://localhost:8080/images/${friends[friend].avatar}?d=${new Date()}`" alt="头像" />
+              :src="`/api/images/${friends[friend].avatar}?d=${new Date()}`" alt="头像" />
               <UserOutlined v-else/>
             </template>
           </a-avatar>
@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     this.username = this.$store.state.username;
-    fetch(this.$store.state.baseURL + `/user/${this.username}`, {
+    fetch(`/api/user/${this.username}`, {
         headers: {
           'token': this.$store.state.token
         }
@@ -123,17 +123,17 @@ export default {
           const newFriend = message.split('/')[1];
           socket.send(`Q/${newFriend}`);
           socket.send(`R/${newFriend}`);
-          this.loadFriendData(newFriend);
           this.friends[newFriend] = {
             online: false,
             isFriend: true,
           };
+          this.loadFriendData(newFriend);
           localStorage.setItem(`${this.username}friends`, JSON.stringify(this.friends));
         }
       });
     },
     loadFriendData (key) {
-      fetch(this.$store.state.baseURL + `/user/${key}`, {
+      fetch(`/api/user/${key}`, {
         headers: {
           'token': this.$store.state.token
         }
@@ -162,9 +162,8 @@ export default {
       this.modalVisible = value;
     },
     handleSearch(value) {
-      const baseURL = this.$store.state.baseURL;
       const token = localStorage.getItem('token');
-      fetch(baseURL + `/user?username=${value}`, {
+      fetch(`/api/user?username=${value}`, {
         headers: {
           'token': token
         }

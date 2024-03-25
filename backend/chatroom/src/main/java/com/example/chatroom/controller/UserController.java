@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -45,7 +46,7 @@ public class UserController {
         User user = userService.getByUsername(claims.getSubject());
 
         String filename = file.getOriginalFilename();
-        String suffix = filename.substring(filename.lastIndexOf("."));
+        String suffix = Objects.requireNonNull(filename).substring(filename.lastIndexOf("."));
 
         String newFilename = user.getAvatar() == null ?
                 UUID.randomUUID().toString().replace("-","") + suffix :
@@ -53,10 +54,13 @@ public class UserController {
         File destFile = new File(System.getProperty("user.dir") +
                 "/assets/images/" + newFilename);
         if (!destFile.getParentFile().exists()) {
-            destFile.getParentFile().mkdirs();
+            boolean success = destFile.getParentFile().mkdirs();
+            if (!success) {
+                return R.error("创建图片目录失败",null);
+            }
         }
         file.transferTo(destFile);
-        String url = "http://localhost:8080/images/" + newFilename;
+        String url = "/images/" + newFilename;
 
         user.setAvatar(newFilename);
         userService.update(user);
